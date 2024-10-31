@@ -1,6 +1,6 @@
 import unittest
 from player import Player
-from statistics_service import StatisticsService
+from statistics_service import SortBy, StatisticsService
 
 initial_players = [
             Player("Semenko", "EDM", 4, 12),
@@ -9,6 +9,7 @@ initial_players = [
             Player("Yzerman", "DET", 42, 56),
             Player("Gretzky", "EDM", 35, 89)
         ]
+
 
 class PlayerReaderStub:
     def get_players(self):
@@ -59,6 +60,36 @@ class TestStatisticsService(unittest.TestCase):
         ]
 
         saatu_jarjestys = self.stats.top(5)
+
+        self.assertSequenceEqual(saatu_jarjestys, oikea_jarjestys)
+        
+    def test_top_palauttaa_pelaajat_jarjestyksessa_parhaat_assistit_ensin(self):
+        # Järjestys on goals, assists
+
+        oikea_jarjestys = [
+            Player("Gretzky", "EDM", 35, 89),
+            Player("Yzerman", "DET", 42, 56),
+            Player("Lemieux", "PIT", 45, 54),
+            Player("Kurri",   "EDM", 37, 53),
+            Player("Semenko", "EDM", 4, 12),
+        ]
+
+        saatu_jarjestys = self.stats.top(5, SortBy.ASSISTS)
+
+        self.assertSequenceEqual(saatu_jarjestys, oikea_jarjestys)
+
+    def test_top_palauttaa_pelaajat_jarjestyksessa_parhaat_goalit_ensin(self):
+        # Järjestys on goals, assists
+
+        oikea_jarjestys = [
+            Player("Lemieux", "PIT", 45, 54),
+            Player("Yzerman", "DET", 42, 56),
+            Player("Kurri",   "EDM", 37, 53),
+            Player("Gretzky", "EDM", 35, 89),
+            Player("Semenko", "EDM", 4, 12),
+        ]
+
+        saatu_jarjestys = self.stats.top(5, SortBy.GOALS)
 
         self.assertSequenceEqual(saatu_jarjestys, oikea_jarjestys)
 
