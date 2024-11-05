@@ -1,8 +1,7 @@
-import requests
-from player import Player
 from rich.console import Console
 from rich.table import Table
-
+from player_reader import PlayerReader
+from player_stats import PlayerStats
 
 season_options = [
     "2023-24",
@@ -15,36 +14,13 @@ nationalty_options = [
     "USA",
 ]
 
-class PlayerReader:
-    def __init__(self, url: str) -> None:
-        self.url = url
-
-    def fetch_players(self) -> list[Player]:
-        response = requests.get(self.url).json()
-        players: list[Player] = []
-
-        for player_dict in response:
-            player = Player(player_dict)
-            players.append(player)
-        
-        return players
-
-        
-class PlayerStats:
-    def __init__(self, reader: PlayerReader) -> None:
-        self.players: list[Player] = reader.fetch_players()
-
-    def top_scorers_by_nationality(self, nationality: str, max_count = 10) -> list[Player]:
-        players = [player for player in self.players if nationality in player.nationality]
-        players.sort(key=lambda player: player.assists + player.goals, reverse=True)
-        return players[0:max_count - 1]
-
-
 def main():
     console = Console()
     console.print("\nNHL statistics by nationality")
+    
     user_input_season = console.input(f"\nSelect season {season_options}: ")
     url = f"https://studies.cs.helsinki.fi/nhlstats/{user_input_season}/players"
+
     reader = PlayerReader(url)
     stats = PlayerStats(reader)
 
