@@ -51,6 +51,33 @@ Register With Username That Is Already In Use
     Submit Credentials
     Register Should Fail With Message  User with username elias already exists
 
+Login After Successful Registration
+    Set Username  elias
+    Set Password  elias1234
+    Set Password Confirmation  elias1234
+    Submit Credentials
+    Register Should Succeed
+    Click Link  Continue to main page
+    Page Should Contain  Ohtu Application main page
+    Click Button  Logout
+    Page Should Contain  Login
+    Set Username  elias
+    Set Password  elias1234
+    Click Button  Login
+    Page Should Contain  Ohtu Application main page
+
+Login After Failed Registration
+    Set Username  elias
+    Set Password  123
+    Submit Credentials
+    Register Should Fail With Message  Password and password confirmation must match
+    Click Link  Login
+    Page Should Contain  Login
+    Set Username  elias
+    Set Password  123
+    Click Button  Login
+    Page Should Contain  Invalid username or password
+
 *** Keywords ***
 Reset Application And Go To Register Page
     Reset Application
